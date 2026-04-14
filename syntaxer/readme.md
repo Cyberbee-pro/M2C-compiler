@@ -1,77 +1,86 @@
-# Syntaxer - Syntax Analysis Phase
+# 🌳 Syntaxer - Phase 2: Parsing & AST Building
 
-## Overview
+## What is the Syntaxer?
 
-The **Syntaxer** is the second phase of the M2C compiler. It performs **syntax analysis** by parsing the token stream from the lexer and building an Abstract Syntax Tree (AST).
+The **Syntaxer** (Syntax Analyzer) is the **second phase** of the M2C compiler. It takes the token stream from the Lexer (which has already decoded morse to standard notation) and:
+1. **Validates** that tokens follow the morse language grammar
+2. **Builds** an Abstract Syntax Tree (AST) - a tree representation of program structure
+3. **Reports** syntax errors if tokens violate grammar rules
 
-## What Does the Syntaxer Do?
-
-The syntaxer takes tokens and validates they follow the grammar rules of the morse-to-C language, then builds a tree structure representing the program.
-
-### Input
-**Token Stream** from the Lexer
+**Key Point:** Morse numbers and identifiers have already been decoded by the Lexer, so the Syntaxer works with standard tokens like `5`, `i`, `hello`, etc.
 
 ```
-Token(KEYWORD, "while")
-Token(IDENTIFIER, "x")
-Token(OPERATOR, "<")
-Token(NUMBER, "10")
-Token(..., ...)
+Morse input:     ( % ( ···· ; ----- ; ····- ) ... )
+                         ↓
+            [LEXER decodes morse]
+                         ↓
+Token stream:     ( % ( i ; 0 ; 5 ) ... )
+                         ↓
+        [SYNTAXER processes]
+                         ↓
+                    Program AST
+                      /    \
+                  ForLoop   ...
+                  /  |  \
+                init cond body
 ```
 
-### Output
-**Abstract Syntax Tree (AST)** - A tree representation of the program structure
+## Input & Output
 
-```
-        Program
-         |
-      WhileLoop
-       /     \
-   Condition  Body
-    /    \      |
-  x    <  10   Block
-              [statements...]
-```
+### 📥 Input
+- **Token Stream** from the Lexer
+- Example: `Token(LPAREN), Token(OPERATOR, "%"), Token(LPAREN), ...`
+
+### 📤 Output
+- **Abstract Syntax Tree (AST)**  
+- Tree nodes representing program structure
+- Type: Root node is `Program` class
 
 ## Key Responsibilities
 
-1. **Grammar Validation**: Ensure tokens follow language grammar rules
-2. **AST Construction**: Build a tree representing program structure
-3. **Error Detection**: Identify syntax errors with helpful messages
-4. **Position Tracking**: Map AST nodes back to source locations for error reporting
+✅ **Grammar Validation**
+- Ensure tokens match valid morse syntax
+- Check parentheses balance and nesting
+
+✅ **AST Construction**
+- Create appropriate AST nodes for each construct
+- Link nodes into a tree structure
+
+✅ **Error Detection**
+- Catch missing tokens or unexpected sequences
+- Report syntax errors with helpful context
+
+✅ **Position Tracking**
+- Map AST nodes back to source locations
+- Enable accurate error reporting
 
 ## Grammar Rules
 
-The M2C compiler supports these structures:
+The M2C compiler supports these structures with morse syntax:
 
 ```
 Program ::= Statement*
 
-Statement ::= IfStatement
-           | ForLoop
-           | WhileLoop
-           | Assignment
-           | FunctionCall
-           | Block
+Statement ::= IfStatement | ForLoop | WhileLoop | FunctionCall
 
-IfStatement ::= "if" "(" Condition ")" Statement ["else" Statement]
+IfStatement ::= "~" "(" Condition ")" Statement
 
-ForLoop ::= "for" "(" Assignment ";" Condition ";" Update ")" Statement
+ForLoop ::= "%" "(" Var ";" Init ";" Condition ";" Update ")" Statement
 
-WhileLoop ::= "while" "(" Condition ")" Statement
+WhileLoop ::= "%%" "(" Condition ")" Statement  
+
+FunctionCall ::= "/||" ArgumentList "||" | "<" String ">;"
 
 Condition ::= Expression ComparisonOp Expression
-           | Expression
 
-Expression ::= Term (("+"|"-") Term)*
+Expression ::= Term (("\+"|"\-") Term)*
 
-Term ::= Factor (("*"|"/") Factor)*
+Term ::= Factor (("\*"|"\/") Factor)*
 
-FunctionCall ::= Identifier "(" ArgumentList ")"
-
-Block ::= "{" Statement* "}"
-
-Assignment ::= Identifier "=" Expression ";"
+Comparison Operators: 
+  - "\<" (less than)
+  - "\>" (greater than)  
+  - "==" (equality, NO backslash)
 ```
 
 ## Data Structures - AST Nodes

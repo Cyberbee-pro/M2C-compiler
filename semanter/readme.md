@@ -1,41 +1,32 @@
-# Semanter - Semantic Analysis Phase
+# ✅ Semanter - Phase 3: Semantic Analysis
 
-## Overview
+## What is the Semanter?
 
-The **Semanter** is the third phase of the M2C compiler. It performs **semantic analysis** by checking the validity and correctness of the AST produced by the syntaxer.
+The **Semanter** (Semantic Analyzer) is the **third phase** of the M2C compiler. It checks if the parse tree makes **logical sense**:
+- Do all variables exist before use?
+- Are types consistent?
+- Do scopes make sense?
 
-## What Does the Semanter Do?
-
-The semanter validates the meaning and logic of the code, not just its structure. While the syntaxer checks "is it valid grammar?", the semanter checks "does it make sense?"
-
-### Input
-**Abstract Syntax Tree (AST)** from the Syntaxer
-
-### Output
-**Annotated AST** with type information and validation results
+While the Syntaxer asks "Is this valid grammar?", the Semanter asks "Does this actually mean something valid?"
 
 ```
-Original:  x = 10 + y
-           (Assignment: x = BinaryOp(10 + y))
-
-Annotated: x = 10 + y  [type: int] ✓ Valid
-           (Assignment: x = BinaryOp(10 + y))
-              └─ types verified
-              └─ variable x is in scope
-              └─ variable y is in scope
+AST (syntactically correct):   x = y + 10
+                                    ↓
+        [SEMANTER analyzes]
+                                    ↓
+✅ Valid:    x and y are declared, types match
+❌ Invalid:  y is undefined, type mismatch, etc.
 ```
 
-## Key Responsibilities
+## Input & Output
 
-1. **Type Checking**: Verify type compatibility in operations
-2. **Scope Management**: Track variable declarations and ensure they're used correctly
-3. **Symbol Table**: Maintain information about declared variables and functions
-4. **Error Detection**: Identify semantic errors like:
-   - Undefined variables
-   - Type mismatches
-   - Redeclaration of variables
-   - Missing return statements
-   - Incorrect function arguments
+### 📥 Input
+- **Abstract Syntax Tree (AST)** from the Syntaxer
+
+### 📤 Output
+- **Annotated AST** with type information
+- Nodes marked as valid/invalid
+- Semantic error list (if any)
 
 ## Data Structures
 
@@ -264,12 +255,8 @@ Test cases should cover:
 ### Example Test Case
 
 ```cpp
-// Semantic error: undefined variable
-std::string code = R"(
-    while (x < 10) {
-        printf(x);
-    }
-)";
+// Semantic error: undefined variable in morse code
+std::string code = "(~(x···--·· +····-·· ·-·--··\n) (<\"....+..\">;||))";  // if x < 10 print x (x undefined)
 
 // Parse to AST...
 // Then analyze:

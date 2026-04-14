@@ -1,44 +1,48 @@
-# Generators - Code Generation Phase
+# 🖨️ Generators - Phase 5: Code Generation
 
-## Overview
+## What are the Generators?
 
-The **Generators** (Code Generation) is the final phase of the M2C compiler. It converts the optimized AST into executable C code.
+The **Generators** (Code Generator) form the **final phase** of the M2C compiler. They convert the optimized AST into **executable C code**.
 
-## What Do the Generators Do?
-
-The code generator traverses the AST and emits equivalent C code statements. The output is valid C code that can be compiled and executed by a standard C compiler.
-
-### Input
-**Optimized AST** from the Optimizers
-
-### Output
-**C Code** - Valid, compilable C source code
+This is where morse code becomes actual C programs!
 
 ```
-Input AST:
-    WhileLoop
-    ├─ Condition: x < 10
-    └─ Body: printf(x)
-
-Output C Code:
-    #include <stdio.h>
-    
-    int main() {
-        while (x < 10) {
-            printf("%d\n", x);
-        }
-        return 0;
-    }
+Optimized AST:       Program
+                      /  |  \
+                    For If  ...
+                     ↓
+        [GENERATORS emit]
+                     ↓
+   #include <stdio.h>
+   int main() {
+       for (...) {
+           if (...) {
+               printf(...)
+           }
+       }
+       return 0;
+   }
 ```
+
+## Input & Output
+
+### 📥 Input
+- **Optimized AST** from Optimizers (or Semanter if no optimization)
+- All nodes are validated and type-checked
+
+### 📤 Output
+- **Valid C code** - ready to compile with gcc/clang
+- Includes all necessary headers
+- Proper structure and indentation
 
 ## Key Responsibilities
 
-1. **Header Generation**: Add necessary C headers (`#include <stdio.h>`, etc.)
-2. **Variable Declaration**: Emit variable declarations with types
-3. **Statement Translation**: Convert each AST node to C code
-4. **Expression Translation**: Convert expressions to C syntax
-5. **Function Call Translation**: Convert morse function calls to C I/O
-6. **Code Formatting**: Produce readable, indented C code
+✅ **Header Generation** - Add necessary `#include` statements
+✅ **Variable Declaration** - Emit `int x;` for all variables
+✅ **Statement Translation** - Convert AST nodes to C statements
+✅ **Expression Translation** - Convert morse expressions to C operators
+✅ **Function Call Translation** - Convert morse I/O to `printf()`
+✅ **Code Formatting** - Proper indentation and structure
 
 ## C Code Generation Rules
 
@@ -47,11 +51,13 @@ Output C Code:
 Map morse language functions to C equivalents:
 
 ```
-Morse Function  →  C Code
-─────────────────────────────────────
-printf(var)     →  printf("%d\n", var);
-scanf(var)      →  scanf("%d", &var);
+Morse Function         →  C Code
+──────────────────────────────────────────────
+<"....+..">;||       →  printf("hi\n");
+/||<...>||           →  variable output
 ```
+
+Note: Morse inside quotes is decoded to ASCII before output
 
 ### 2. **Data Types**
 
@@ -364,14 +370,12 @@ assert(cCode.find("int main()") != std::string::npos);
 
 Given this morse code input:
 ```
-(define-main
-    (declare x 0)
-    (while (< x 5)
-        (print x)
-        (assign x (+ x 1))
-    )
+(%(x;0;--;····)
+    (<"....+..">;||)
+    (x--;x)
 )
 ```
+(for x=0; x<5; x++ print x)
 
 Generated C code:
 ```c
@@ -380,10 +384,8 @@ Generated C code:
 
 int main() {
     int x;
-    x = 0;
-    while (x < 5) {
-        printf("%d\n", x);
-        x = x + 1;
+    for (x = 0; x < 5; x++) {
+        printf("hi\n");
     }
     return 0;
 }

@@ -1,39 +1,36 @@
-# Optimizers - Optimization Phase
+# ⚡ Optimizers - Phase 4: Code Optimization (Optional)
 
-## Overview
+## What are the Optimizers?
 
-The **Optimizers** is the fourth (optional) phase of the M2C compiler. It performs **code optimization** by improving the efficiency and performance of the AST before code generation.
+The **Optimizers** form the **fourth (optional) phase** of the M2C compiler. They improve code **performance and efficiency** without changing what the program does.
 
-## What Do the Optimizers Do?
-
-The optimizers analyze the AST and apply transformations to make the generated C code more efficient, without changing the program's behavior.
-
-### Input
-**Annotated AST** from the Semanter
-
-### Output
-**Optimized AST** - Same structure, but with improvements applied
+This phase is **optional** - you can skip it if runtime speed is not a concern.
 
 ```
-Original:
-    x = 0;
-    while (x < 100) {
-        x = x + 1;
-    }
-    print(x);
-
-Optimized:
-    x = 100;              // Loop unrolled/computed
-    print(x);
+AST (working but possibly inefficient):
+    x = 5 + 3 + 2
+                ↓
+    [OPTIMIZERS improve]
+                ↓
+Optimized AST:
+    x = 10  (computed at compile time)
 ```
+
+## Input & Output
+
+### 📥 Input
+**Annotated AST** from the Semanter (already type-checked and validated)
+
+### 📤 Output
+**Optimized AST** - Same logical meaning, but faster execution
 
 ## Key Responsibilities
 
-1. **Dead Code Elimination**: Remove unreachable code
-2. **Loop Optimization**: Unroll simple loops, optimize loop bounds
-3. **Constant Folding**: Evaluate constant expressions at compile time
-4. **Common Subexpression Elimination**: Remove duplicate calculations
-5. **Algebraic Simplification**: Simplify expressions (e.g., `x * 1` → `x`)
+✅ **Dead Code Elimination** - Remove unreachable code
+✅ **Constant Folding** - Pre-compute constant expressions  
+✅ **Loop Optimization** - Simplify or unroll loops
+✅ **Algebraic Simplification** - Simplify expressions
+✅ **Common Subexpression Elimination** - Eliminate redundant calculations
 
 ## Optimization Techniques
 

@@ -1,88 +1,153 @@
 # Contributing to M2C Compiler
 
-Thank you for your interest in contributing to the M2C Compiler project! This guide will help you understand how to get started.
+Thank you for contributing to the M2C Compiler! This guide will help you understand how to get started and make meaningful contributions.
 
-## How to Contribute
+## 🎯 Overview: What is M2C?
 
-### 1. **Understand the Compiler Phases**
+M2C is a **5-phase compiler** that translates morse-encoded source code into executable C code. Each phase has a specific role:
 
-Before contributing, familiarize yourself with the standard compiler architecture. Each phase has specific responsibilities:
+1. **Lexer** - Reads morse, outputs tokens  
+2. **Syntaxer** - Validates structure, builds AST
+3. **Semanter** - Checks types and scope
+4. **Optimizers** - Improves performance (optional)
+5. **Generators** - Converts AST to C
 
-- **Lexer** (Lexical Analysis): Token generation
-- **Syntaxer** (Syntax Analysis): Structure validation and AST building
-- **Semanter** (Semantic Analysis): Logical error detection
-- **Optimizers** (Optimization): Performance improvement
-- **Generators** (Code Generation): C code output
+See [README.md](readme.md) for the full architecture overview.
 
-See [readme.md](readme.md) for the overall architecture.
+## 🔧 How to Get Started
 
-### 2. **Choose Your Phase**
+### Step 1: Choose Your Phase
 
-Select one of the compiler phases to contribute to:
+Select the compiler phase you'd like to work on:
 
-| Phase | File | Best For |
-|-------|------|----------|
-| Lexical Analysis | `lexer/` | Token pattern matching, morse-to-token conversion |
-| Syntax Analysis | `syntaxer/` | Grammar rules, AST node design |
-| Semantic Analysis | `semanter/` | Type checking, scope management |
-| Optimization | `optimizers/` | Algorithm design, performance improvement |
-| Code Generation | `generations/` | C code emission, backend engineering |
+| Phase | Folder | Great For | Difficulty |
+|-------|--------|-----------|------------|
+| Lexer | `lexer/` | Parsing morse patterns, tokenization | Medium |
+| Syntaxer | `syntaxer/` | Grammar rules, tree structures | Hard |
+| Semanter | `semanter/` | Type checking, scope management | Hard |
+| Optimizers | `optimizers/` | Algorithm design, code improvement | Medium |
+| Generators | `generations/` | C code output, string formatting | Medium |
 
-Visit the README in your chosen phase directory for specific guidelines.
+**New to compilers?** Start with **Lexer** or **Generators** - they're more intuitive.
 
-### 3. **Development Workflow**
+### Step 2: Read the Phase Documentation
 
+Each phase directory has a `readme.md` file:
+- Data structures (Token, AST nodes, etc.)
+- Algorithm guidelines  
+- Implementation patterns
+- Test examples
+
+```bash
+cd <phase-directory>
+cat readme.md
 ```
-1. Fork or clone the repository
-2. Create a branch for your feature/fix
-3. Read the phase-specific README
-4. Implement your changes
-5. Test thoroughly with various morse code inputs
-6. Submit a pull request with clear description
+
+### Step 3: Implement Your Component
+
+- Follow the guidelines in the phase README
+- Use the provided code structures
+- Implement core functions
+- Add comments for complex logic
+
+### Step 4: Test Your Code
+
+Write test cases for:
+- Valid input cases (morse code that should work)
+- Invalid input cases (error handling)
+- Edge cases (empty input, single character, etc.)
+
+**Example test:**
+```cpp
+Lexer lexer("(% (i;0;10) (<\"hi\">))");
+auto tokens = lexer.tokenize();
+assert(tokens.size() > 0);
+assert(tokens[0].type == SYMBOL);
 ```
 
-### 4. **Code Guidelines**
+### Step 5: Submit Changes
 
+- Create clear commit messages
+- Reference issue numbers if applicable  
+- Explain what your code does
+- Include test cases
+
+## 📋 Code Guidelines
+
+### Language & Style
 - **Language**: C/C++
-- **Style**: Follow existing code conventions in your chosen phase
-- **Comments**: Add comments for complex logic
-- **Testing**: Include test cases for your changes
-- **Documentation**: Update relevant README files if adding features
+- **Formatting**: Consistent with existing code in the phase
+- **Comments**: Add explanatory comments for non-obvious logic
+- **Naming**: Use clear, descriptive variable and function names
 
-### 5. **Testing**
+### Best Practices
+- Don't repeat code (use helper functions)
+- Keep functions focused on one task
+- Return errors clearly (don't silently fail)
+- Handle edge cases explicitly
 
-Each phase should have test cases. When submitting changes:
-- Ensure all existing tests pass
-- Add new tests for added functionality
-- Test edge cases and error conditions
+### Documentation
+- Update the phase README if adding features
+- Comment complex algorithms
+- Provide usage examples
 
-### 6. **Issue Reporting**
+## 🐛 Reporting Issues
 
-If you find bugs or have feature requests:
-- Check existing issues first
-- Provide clear description and reproduction steps
-- Include sample morse code that demonstrates the issue
+Found a bug or have an idea?
 
-## Phase-Specific Guidelines
+1. **Search first** - Check existing issues
+2. **Be specific** - Include morse code example that shows the problem
+3. **Show the error** - Paste error messages or unexpected behavior
+4. **Suggest a fix** - If you have ideas, mention them
 
-For detailed guidelines on contributing to a specific phase, see:
-- [Lexer Guidelines](lexer/readme.md)
-- [Syntaxer Guidelines](syntaxer/readme.md)
-- [Semanter Guidelines](semanter/readme.md)
-- [Optimizers Guidelines](optimizers/readme.md)
-- [Generators Guidelines](generations/readme.md)
+**Example issue:**
+```
+Title: Lexer crashes on empty parentheses
 
-## Getting Help
+Description:
+The lexer crashes when given input: "()"
 
-- Review the phase-specific README files
-- Check existing code for patterns
-- Look at test cases for usage examples
-- Ask questions in issues or pull request discussions
+Error: Segmentation fault at line 45
 
-## License
+Expected: Should tokenize as LPAREN, RPAREN
+```
 
-By contributing to M2C Compiler, you agree that your contributions will be licensed under the same license as the project.
+## 📚 Learning Resources
+
+- **Compiler Theory**: Read about [3-address code](https://en.wikipedia.org/wiki/Three-address_code) and ASTs
+- **Morse Code**: Learn morse syntax in main [README.md](readme.md)
+- **Examples**: Check `phase/readme.md` for code examples
+- **Questions**: Ask in issues or discussions
+
+## 🚀 Contribution Checklist
+
+Before submitting:
+
+- [ ] Code follows the style of the phase
+- [ ] All existing tests still pass
+- [ ] New tests added for your changes
+- [ ] Comments explain complex logic
+- [ ] README updated if adding features
+- [ ] Commit message is clear and descriptive
+
+## 🎓 Understanding the Pipeline
+
+As you work on your phase, remember:
+- **Lexer output** → feeds into Syntaxer
+- **Syntaxer output** → feeds into Semanter  
+- **Semanter output** → optionally fed to Optimizers
+- **Optimizer/Semanter output** → fed to Generators
+- **Generators output** → valid C code
+
+So if you change something in Lexer, test how it affects downstream phases!
+
+## 📞 Need Help?
+
+- Read the phase `readme.md` thoroughly
+- Look at existing implementations
+- Check test files for usage patterns
+- Ask in issues (we're here to help!)
 
 ---
 
-Happy contributing! 🚀
+**Thank you for contributing! Together we're building a unique compiler. 🚀**
