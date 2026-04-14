@@ -6,8 +6,8 @@ The **Lexer** (Lexical Analyzer) is the **first phase** of the M2C compiler. It 
 
 Think of it like this:
 ```
-Raw morse input:         (% (·-;-----; ····-) (<"----·---··---">))
-                         Note: Everything is morse! (i=·-, 0=-----, etc.)
+Raw morse input:         (% (.-;-----; .....) (<"----.---.....---">))
+                         Note: Everything is morse! (i=.-, 0=-----, etc.)
                          ↓
     [LEXER processes morse → base characters]
                          ↓
@@ -18,8 +18,8 @@ Token stream:            ( % ( i ; 0 ; 5 ) ( < "done" > ) )
 ## ⚠️ Key Insight: Complete Morse Encoding
 
 **The lexer must handle morse-encoded numbers and identifiers too**, not just operators:
-- **Morse Numbers**: `-----` (0), `·----` (1), `·---·` (9), etc.
-- **Morse Identifiers**: Variable names like `····+·` represent a two-character variable
+- **Morse Numbers**: `-----` (0), `.----` (1), `.---.` (9), etc.
+- **Morse Identifiers**: Variable names like `....+.` represent a two-character variable
 - **Morse Strings**: Every character inside `"..."` is morse-encoded
 - **Morse Operators**: `~`, `%`, `;`, `<`, `>`, etc. (as before)
 
@@ -31,8 +31,8 @@ The lexer reads all of these, decodes them to standard characters, and produces 
 - **Raw morse code string** (sequences of morse characters: dots `·`, dashes `-`, spaces)
 - Example (with morse-encoded numbers & identifiers):
   ```
-  (%(····;-----; ····-) (<"ste">)||)
-  (i=····, 0=-----, 5=····-, s=···, t=-, e=·)
+  (%(....; -----; .....) (<"ste">)||)
+  (i=...., 0=-----, 5=....., s=..., t=-, e=.)
   ```
 
 ### 📤 Output  
@@ -44,21 +44,21 @@ The lexer reads all of these, decodes them to standard characters, and produces 
 ### Example Transformation
 
 ```
-Input Morse:   ( % ( ···· ; ----- ; ····- ) ( < "··-" > ) )
-               (Morse-encoded: i=····, 0=-----, 5=····-, "st"=·-·+·)
+Input Morse:   ( % ( .... ; ----- ; ..... ) ( < ".-.-" > ) )
+               (Morse-encoded: i=...., 0=-----, 5=....., "st"=.-+.)
 
 Output Tokens (decoded):
   Token(LPAREN, "(", 1, 0)
   Token(OPERATOR, "%", 1, 2)
   Token(LPAREN, "(", 1, 4)
-  Token(IDENTIFIER, "i", 1, 6)           ← decoded from ····
+  Token(IDENTIFIER, "i", 1, 6)           ← decoded from .... 
   Token(SEMICOLON, ";", 1, 7)
   Token(NUMBER, "0", 1, 8)               ← decoded from -----
   Token(SEMICOLON, ";", 1, 9)
-  Token(NUMBER, "5", 1, 10)              ← decoded from ····-
+  Token(NUMBER, "5", 1, 10)              ← decoded from .....
   Token(RPAREN, ")", 1, 12)
   Token(LT_BRACKET, "<", 1, 13)
-  Token(STRING, "st", 1, 14)             ← decoded from ·-·+·
+  Token(STRING, "st", 1, 14)             ← decoded from .-.+.
   Token(GT_BRACKET, ">", 1, 17)
   Token(RPAREN, ")", 1, 18)
   Token(EOF, "", 1, 19)
@@ -68,7 +68,7 @@ Output Tokens (decoded):
 
 ✅ **Morse Code Recognition**
 - Know which morse patterns map to which characters
-- Example: `·` = 'e', `···` = 's', `····` = 'i', `-----` = '0', `·---·` = '9'
+- Example: `.` = 'e', `...` = 's', `....` = 'i', `-----` = '0', `.---.` = '9'
 - **Important**: Numbers and identifiers are also morse-encoded!
 
 ✅ **Tokenization**  
@@ -162,21 +162,21 @@ Define character mappings for morse sequences (letters & numbers):
 ```cpp
 std::map<std::string, char> morseToChar = {
     // Letters
-    {"·-", 'a'},      {"-···", 'b'},    {"-·-·", 'c'},    {"-..", 'd'},
-    {"·", 'e'},       {"..-.", 'f'},    {"--.‍", 'g'},     {"....", 'h'},
+    {".-", 'a'},      {"-...", 'b'},    {"-.-.", 'c'},    {"-..", 'd'},
+    {".", 'e'},       {"..-.", 'f'},    {"--.", 'g'},     {"....", 'h'},
     // ...
     
     // Numbers (morse uses 5-character patterns)
-    {"-----", '0'},   {"·----", '1'},   {"··---", '2'},   {"···--", '3'},
-    {"····-", '4'},   {"····+', '5'},   {"-····", '6'},   {"--···", '7'},
-    {"---··", '8'},   {"·---·", '9'},
+    {"-----", '0'},   {".----", '1'},   {"..---", '2'},   {"...--", '3'},
+    {"....-", '4'},   {".....", '5'},   {"-....", '6'},   {"--...", '7'},
+    {"---..", '8'},   {"----.", '9'},
 };
 ```
 
 **Note:** When tokenizing, recognize sequences of morse patterns separated by spaces or delimiters. For example:
-- `····` → 'i' (identifier start)
+- `....` → 'i' (identifier start)
 - `-----` → '0' (number)
-- `····` followed by `-` → could be 'i-' (two char identifier)
+- `....` followed by `-` → could be 'i-' (two char identifier)
 
 ### 2. **Algorithm Overview**
 

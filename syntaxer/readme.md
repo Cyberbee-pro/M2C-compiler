@@ -10,7 +10,7 @@ The **Syntaxer** (Syntax Analyzer) is the **second phase** of the M2C compiler. 
 **Key Point:** Morse numbers and identifiers have already been decoded by the Lexer, so the Syntaxer works with standard tokens like `5`, `i`, `hello`, etc.
 
 ```
-Morse input:     ( % ( ···· ; ----- ; ····- ) ... )
+Morse input:     ( % ( .... ; ----- ; ..... ) ... )
                          ↓
             [LEXER decodes morse]
                          ↓

@@ -370,7 +370,7 @@ assert(cCode.find("int main()") != std::string::npos);
 
 Given this morse code input:
 ```
-(%(x;0;--;····)
+(%(x;0;--;....)
     (<"....+..">;||)
     (x--;x)
 )
