@@ -61,28 +61,28 @@ class fileReader{
         while (std::getline(inputFile, readLine)) {
             // std::cout << readLine << std::endl;
             std::string buffer = "";
-            for(int i = 0 ; i <= readLine.length() ; i++){
+            for(int i = 0 ; i < readLine.length() ; i++){
                 
-                if(readLine[i] == ' ' ||readLine[i] == ';'||readLine[i] == EOF||readLine[i] == '\n'){
+                if(readLine[i] == ' ' ||readLine[i] == ';'){
                     std::cout<<"\n Seperator : \""<< readLine[i]<<"\""<<std::endl;
-                if(buffer!=""){
-                    std::cout<<"\n Buffer : "<<buffer<<std::endl;
-                    buffer="";
-                }
-                }
-                else{
-                    buffer+=readLine[i];
-                    std::cout<<"\n Token : "<< readLine[i]<<std::endl;
-                }
+                    if(buffer!=""){
+                        std::cout<<"\n Buffer : "<<buffer<<std::endl;
+                        buffer="";
+                    }
+                }else{
+                        buffer+=readLine[i];
+                        std::cout<<"\n Token : "<< readLine[i]<<std::endl;
+                    }
             }
-        }   
+        std::cout<<"\n Buffer : "<<buffer<<std::endl;
+        buffer="";   
+        }
     }
 
     ~fileReader(){
         std::cout<<"\ndestructor called!!"<<std::endl;
         inputFile.close();
     }
-
 
 };
 
