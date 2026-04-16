@@ -24,13 +24,13 @@ class fileReader{
     private:
     std::ifstream inputFile;
     std::string fileName, readLine;
+    int i;
 
     public:
 
     fileReader(){
         
     }
-
 
     fileReader(std::string fileName){
         this->fileName = fileName;
@@ -61,7 +61,7 @@ class fileReader{
         while (std::getline(inputFile, readLine)) {
             // std::cout << readLine << std::endl;
             std::string buffer = "";
-            for(int i = 0 ; i < readLine.length() ; i++){
+            for(i = 0 ; i < readLine.length() ; i++){
                 
                 if(readLine[i] == ' ' ||readLine[i] == ';'){
                     std::cout<<"\n Seperator : \""<< readLine[i]<<"\""<<std::endl;
@@ -74,8 +74,11 @@ class fileReader{
                         std::cout<<"\n Token : "<< readLine[i]<<std::endl;
                     }
             }
-        std::cout<<"\n Buffer : "<<buffer<<std::endl;
-        buffer="";   
+            if(i==readLine.length()&&buffer!=""){
+                    std::cout<<"\n Buffer : "<<buffer<<std::endl;
+                    buffer=""; 
+                }
+        
         }
     }
 
