@@ -18,41 +18,18 @@ enum TokenSeparator{
     SEMI_COLLON,
 };
 
-class flileReader{
-    private:
-    // FILE *inputFlie;
-    std::string fileName;
-    public:
-
-
-    // std::ifstream inputFile("test.cym2c");
-    void openFile(){
-        std::cout<<"\nEnter file name:"<<std::endl;
-        std::cin>>fileName;
-        std::ifstream inputFile(fileName); //open file
-        if (!inputFile.is_open()) {
-            std::cerr << "Error: Could not open the file!" << std::endl;
-            exit(1);
-        }
-    }
-
-
-        void readFile(){
-            while (std::getline(inputFile, readLine)) {
-                std::cout << readLine << std::endl;
-            }   
-        }
-
-
-};
-
-
 int main (){
     std::cout<<"Hi Mom"<<std::endl;
-
+    std::ifstream inputFile("test.cym2c");
+    if (!inputFile.is_open()) {
+        std::cerr << "Error: Could not open the file!" << std::endl;
+        return 1;
+    }
     std::string readLine;
     // 3. Read the file line by line
-    
+    while (std::getline(inputFile, readLine)) {
+        std::cout << readLine << std::endl;
+    }
 
     return 0;
 }
