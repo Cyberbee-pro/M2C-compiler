@@ -74,7 +74,7 @@ class fileReader{
                         std::cout<<"\n Token : "<< readLine[i]<<std::endl;
                     }
             }
-            if(i==readLine.length()){
+            if(i==readLine.length()&&buffer!=""){
                     std::cout<<"\n Buffer : "<<buffer<<std::endl;
                     buffer=""; 
                 }
