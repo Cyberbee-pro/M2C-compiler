@@ -1,6 +1,7 @@
 #include<iostream>
 #include<bits/stdc++.h>
 #include<string>
+#include<vector>
 
 
 enum TokenKey{
@@ -16,32 +17,71 @@ enum TokenSeparator{
     CURL_ST,
     COMA,
     SEMI_COLLON,
+    SPACE
 };
 
-class flileReader{
+class fileReader{
     private:
-    // FILE *inputFlie;
-    std::string fileName;
+    std::ifstream inputFile;
+    std::string fileName, readLine;
+
     public:
 
+    fileReader(){
+        
+    }
+
+
+    fileReader(std::string fileName){
+        this->fileName = fileName;
+        openFile(1);
+    }
 
     // std::ifstream inputFile("test.cym2c");
     void openFile(){
         std::cout<<"\nEnter file name:"<<std::endl;
         std::cin>>fileName;
-        std::ifstream inputFile(fileName); //open file
+        inputFile.open(fileName);
         if (!inputFile.is_open()) {
             std::cerr << "Error: Could not open the file!" << std::endl;
             exit(1);
         }
     }
 
-
-        void readFile(){
-            while (std::getline(inputFile, readLine)) {
-                std::cout << readLine << std::endl;
-            }   
+    void openFile(int i){
+        inputFile.open(fileName);
+        if (!inputFile.is_open()) {
+            std::cerr << "Error: Could not open the file!" << std::endl;
+            exit(1);
         }
+    }
+
+    // 3. Read the file line by line
+    void readFile(){
+        while (std::getline(inputFile, readLine)) {
+            // std::cout << readLine << std::endl;
+            std::string buffer = "";
+            for(int i = 0 ; i <= readLine.length() ; i++){
+                
+                if(readLine[i] == ' ' ||readLine[i] == ';'||readLine[i] == EOF||readLine[i] == '\n'){
+                    std::cout<<"\n Seperator : \""<< readLine[i]<<"\""<<std::endl;
+                if(buffer!=""){
+                    std::cout<<"\n Buffer : "<<buffer<<std::endl;
+                    buffer="";
+                }
+                }
+                else{
+                    buffer+=readLine[i];
+                    std::cout<<"\n Token : "<< readLine[i]<<std::endl;
+                }
+            }
+        }   
+    }
+
+    ~fileReader(){
+        std::cout<<"\ndestructor called!!"<<std::endl;
+        inputFile.close();
+    }
 
 
 };
@@ -49,10 +89,8 @@ class flileReader{
 
 int main (){
     std::cout<<"Hi Mom"<<std::endl;
-
-    std::string readLine;
-    // 3. Read the file line by line
-    
-
+    fileReader file("test.cym2c");
+    // file.openFile();
+    file.readFile();
     return 0;
 }
