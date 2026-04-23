@@ -53,8 +53,8 @@ Map morse language functions to C equivalents:
 ```
 Morse Function         →  C Code
 ──────────────────────────────────────────────
-<"....+..">;||       →  printf("hi\n");
-/||<...>||           →  variable output
+<"....+..">;         →  printf("hi\n");
+/{<...>}             →  variable output
 ```
 
 Note: Morse inside quotes is decoded to ASCII before output
@@ -371,7 +371,7 @@ assert(cCode.find("int main()") != std::string::npos);
 Given this morse code input:
 ```
 (%(x;0;--;....)
-    (<"....+..">;||)
+    (<"....+..">;)
     (x--;x)
 )
 ```

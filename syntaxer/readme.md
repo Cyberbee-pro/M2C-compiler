@@ -69,7 +69,7 @@ ForLoop ::= "%" "(" Var ";" Init ";" Condition ";" Update ")" Statement
 
 WhileLoop ::= "%%" "(" Condition ")" Statement  
 
-FunctionCall ::= "/||" ArgumentList "||" | "<" String ">;"
+FunctionCall ::= "/{" ArgumentList "}" | "<" String ">;"
 
 Condition ::= Expression ComparisonOp Expression
 

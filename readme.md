@@ -6,7 +6,7 @@
 
 The M2C compiler supports creating C programs with:
 - **Control Flow**: Conditionals (`~` for if), loops (`%` for, `%%` for while)
-- **I/O Operations**: String output (`<"...">;||`) and variable display
+- **I/O Operations**: String output (`<"...">;`) and variable display
 - **Variables**: Integer variables with basic arithmetic operations
 - **Full Compilation Pipeline**: From morse code → tokens → AST → C code
 
@@ -16,7 +16,7 @@ The M2C compiler processes morse code through a standard compiler pipeline:
 
 ```
 ┌─────────────────┐
-│  Morse Input    │     f. example: (%(x;0;10)||(<"....">);||)
+│  Morse Input    │     f. example: (%(x;0;10){(<"....">);})
 └────────┬────────┘
          ↓
     [LEXER]         ──→  Converts morse → tokens
@@ -86,11 +86,14 @@ m2c compiler/
 ### Control Flow Operators
 | Element | Morse | Meaning |
 |---------|-------|---------|
+| PRINT statement | `<"" , .-- >` | Print data to Cli |
 | If statement | `~()` | Conditional execution |
+| Else statement | `~~()` | Conditional execution |
+| Else statement | `~~ ~()` | Conditional execution |
 | For loop | `%()` | Counter-controlled loop |
 | While loop | `%%()` | Condition-controlled loop |
-| Block start/end | `|| ||` | Represents C braces `{}` |
-| Main function | `/|| ||` | Main function wrapper |
+| Block start/end | `{ }` | Represents C braces `{}` |
+| Main function | `/{ }` | Main function wrapper |
 | EXIT Keyword | ` ^() ` | exit function|
 
 
@@ -132,9 +135,9 @@ Please refer to [contribution.md](contribution.md) for detailed contribution gui
 ### Example 1: Simple Output (Print "Hello")
 **Morse Input:**
 ```
-/|| 
+/{ 
   <"......... . .. ... .. .. ... . --.--.">
-||
+}
 ```
 *Note: Each character in the string is morse-encoded; spaces separate characters*
 
@@ -150,11 +153,11 @@ int main() {
 ### Example 2: Loop with Morse Numbers
 **Morse Input:** (Loop from morse-encoded 0 to 9)
 ```
-/||
-  %(.---;....-;.---.) ||
+/{
+  %(.---;....-;.---.) {
     <"...-.--..-..---+-.-">;
-  ||
-||
+  }
+}
 ```
 *Translation: `for(i;5;9)` in morse, printing "loop" each iteration*
 
@@ -172,11 +175,11 @@ int main() {
 ### Example 3: Conditional with Morse Variables
 **Morse Input:**
 ```
-/||
-  ~(x) ||
+/{
+  ~(x) {
     <".-.-.-..-.">;
-  ||
-||
+  }
+}
 ```
 *Translation: if morse-variable `x` is true, print in morse*
 
@@ -194,14 +197,14 @@ int main() {
 ### Example 3.1: Conditional with Morse Variables
 **Morse Input:**
 ```
-/||
-  ~(x) ||
+/{
+  ~(x) {
     <".-.-.-..-.">;
-  ||
-  ~~(y) ||
+  }
+  ~~(y) {
     <"-.+---">
-  ||
-||
+  }
+}
 ```
 *Translation: if morse-variable `x` is true, print in morse*
 
@@ -223,10 +226,9 @@ int main() {
 ### Example 4: Arithmetic Operations with Backslash Operators
 **Morse Input:** (Using backslash-prefixed arithmetic operators)
 ```
-/||
+/{
   ....= \+ ....-
-  ||
-||
+  }
 ```
 *Translation: `a = b + 5` in morse (using `\+` for addition)*
 

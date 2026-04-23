@@ -31,7 +31,7 @@ The lexer reads all of these, decodes them to standard characters, and produces 
 - **Raw morse code string** (sequences of morse characters: dots `·`, dashes `-`, spaces)
 - Example (with morse-encoded numbers & identifiers):
   ```
-  (%(....; -----; .....) (<"ste">)||)
+  (%(....; -----; .....) (<"ste">)})
   (i=...., 0=-----, 5=....., s=..., t=-, e=.)
   ```
 
