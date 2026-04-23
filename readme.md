@@ -91,6 +91,8 @@ m2c compiler/
 | While loop | `%%()` | Condition-controlled loop |
 | Block start/end | `|| ||` | Represents C braces `{}` |
 | Main function | `/|| ||` | Main function wrapper |
+| EXIT Keyword | ` ^() ` | exit function|
+
 
 ### Arithmetic & Conditional Operators
 | Operator | Morse | Meaning | Notes |

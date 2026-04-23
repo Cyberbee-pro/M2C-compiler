@@ -23,6 +23,13 @@ enum TokenSeparator
     SPACE
 };
 
+
+class TokenKeywords
+{
+    
+};
+
+
 class fileReader
 {
 private:
@@ -73,8 +80,8 @@ public:
             std::string buffer = "";
             for (i = 0; i < readLine.length(); i++)
             {
-                // Checks for separators ie space and semicolon
-                if (readLine[i] == ' ' || readLine[i] == ';')
+                // Checks for separators ie space , semicolon,coma, curly braces and prints them and the buffer if it is not empty
+                if (readLine[i] == ' ' || readLine[i] == ';'||readLine[i] == '{' || readLine[i] == '}'||readLine[i] == ',')
                 {
                     std::cout << "\nSeperator : \"" << readLine[i] << "\"" << std::endl;
                     if (buffer != "")
@@ -82,11 +89,18 @@ public:
                         std::cout << "Buffer : " << buffer <<std::endl<< std::endl;
                         buffer = "";
                     }
+                }// open perenthesis is not a separator but it is used to check for function calls and loops and if statements
+                else if (readLine[i] == '(')
+                {   
+                    std::cout << "Buffer : " << buffer <<std::endl;
+                    std::cout << "\nOpen Parenthesis : \"" << readLine[i] << "\"" << std::endl;
+                    buffer = "";
                 }
-                // checks for curly braces
-                else if (readLine[i] == '{' || readLine[i] == '}')
+                else if (readLine[i] == ')')
                 {
-                    std::cout << "\nSeperator : \"" << readLine[i] << "\"" << std::endl;
+                    std::cout << "\nClose Parenthesis : \"" << readLine[i] << "\"" << std::endl;
+                    std::cout << "Buffer : " << buffer <<std::endl<< std::endl;
+                    buffer = "";
                 }
                 // checks for number tokens
                 else if (std::isdigit(readLine[i]))
