@@ -31,6 +31,7 @@ static inline std::map<std::string, TokenKeywords> keywordsMap = {
 enum TokenSeparator
 {
     CURL_ST,
+    CURL_END,
     COMA,
     SEMI_COLLON,
     SPACE
@@ -38,11 +39,76 @@ enum TokenSeparator
 
 static inline std::map<std::string, TokenSeparator> separatorMap = {
     {"{", TokenSeparator::CURL_ST},
-    {"}", TokenSeparator::CURL_ST},
+    {"}", TokenSeparator::CURL_END},
     {",", TokenSeparator::COMA},
     {";", TokenSeparator::SEMI_COLLON},
     {" ", TokenSeparator::SPACE}
 };
+
+
+
+
+
+enum TokenType
+{
+    KEYWORD,
+    SEPARATOR,
+    IDENTIFIER,
+    LITERAL,
+    OPERATOR
+};
+
+enum TokenChar{
+    A,B,C,D,E,F,G,H,I,J,K,L,M,N,O,P,Q,R,S,T,U,V,W,X,Y,Z,
+};
+
+std::map<std::string, TokenChar> charMap = {
+    {".-", TokenChar::A},
+    {"-...", TokenChar::B},
+    {"-.-.", TokenChar::C},
+    {"-..", TokenChar::D},
+    {".", TokenChar::E},
+    {"..-.", TokenChar::F},
+    {"--.", TokenChar::G},
+    {"....", TokenChar::H},
+    {"..", TokenChar::I},
+    {".---", TokenChar::J},
+    {"-.-", TokenChar::K},
+    {".-..", TokenChar::L},
+    {"--", TokenChar::M},
+    {"-.", TokenChar::N},
+    {"---", TokenChar::O},
+    {".--.", TokenChar::P},
+    {"--.-", TokenChar::Q},
+    {".-.", TokenChar::R},
+    {"...", TokenChar::S},
+    {"-", TokenChar::T},
+    {"..-", TokenChar::U},
+    {"...-", TokenChar::V},
+    {".--", TokenChar::W},
+    {"-..-", TokenChar::X},
+    {"-.--", TokenChar::Y},
+    {"--..", TokenChar::Z}
+};
+
+
+enum TokenNumeric{
+    ZERO,ONE,TWO,THREE,FOUR,FIVE,SIX,SEVEN,EIGHT,NINE
+};
+
+std::map<std::string, TokenNumeric> numericMap = {
+    {"-----", TokenNumeric::ZERO},
+    {".----", TokenNumeric::ONE},
+    {"..---", TokenNumeric::TWO},
+    {"...--", TokenNumeric::THREE},
+    {"....-", TokenNumeric::FOUR},
+    {".....", TokenNumeric::FIVE},
+    {"-....", TokenNumeric::SIX},
+    {"--...", TokenNumeric::SEVEN},
+    {"---..", TokenNumeric::EIGHT},
+    {"----.", TokenNumeric::NINE}
+};
+
 
 
 struct Token
