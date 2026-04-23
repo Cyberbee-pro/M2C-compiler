@@ -256,7 +256,7 @@ Test cases should cover:
 
 ```cpp
 // Semantic error: undefined variable in morse code
-std::string code = "(~(x...-..-.--.....--....-...--.-)\n) (<\"....+..\">;||))";  // if x < 10 print x (x undefined)
+std::string code = "(~(x...-..-.--.....--....-...--.-)\n) (<\"....+..\">;))";  // if x < 10 print x (x undefined)
 
 // Parse to AST...
 // Then analyze:
