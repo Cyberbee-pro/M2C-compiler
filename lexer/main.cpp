@@ -5,6 +5,7 @@
 #include <fstream>
 #include <locale>
 #include <map>
+#include <exception>
 
 enum TokenKeywords
 {
@@ -124,7 +125,7 @@ class fileReader
 private:
     std::ifstream inputFile;
     std::string fileName, readLine;
-    int i;
+    int i,error = 0;
 
 public:
     fileReader()
@@ -169,8 +170,14 @@ public:
             std::string buffer = "";
             for (i = 0; i < readLine.length(); i++)
             {
+                if(readLine[i] == '/' && readLine[i+1] == '/')
+                {
+                    std::cout << "\nComment : \"" << readLine.substr(i) << "\"" << std::endl;
+                    break;
+
+                }
                 // Checks for separators ie space , semicolon,coma, curly braces and prints them and the buffer if it is not empty
-                if (readLine[i] == ' ' || readLine[i] == ';'||readLine[i] == '{' || readLine[i] == '}'||readLine[i] == ',')
+                else if (readLine[i] == ' ' || readLine[i] == ';'||readLine[i] == '{' || readLine[i] == '}'||readLine[i] == ',')
                 {
                     std::cout << "\nSeperator : \"" << readLine[i] << "\"" << std::endl;
                     if (buffer != "")
@@ -212,13 +219,19 @@ public:
                 
             }
             // throws error if line ends without separator and buffer is not empty
+            try{ 
             if (i == readLine.length() && buffer != "")
             {
                 std::cout << "\n Buffer : " << buffer << std::endl;
-                std::cout << "ERROR : Line end without separator!!" << std::endl;
                 buffer = "";
                 std::cout << "Line end" << std::endl;
             }
+            throw    std::compiletime_error(std::cout << "ERROR : Line end without separator!!" << std::endl);
+            
+        }
+        catch(){
+            std::cerr << "Error: Line end without separator!!" << std::endl;
+        }
         }
     }
 
