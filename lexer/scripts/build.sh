@@ -1,0 +1,7 @@
+# g++ main.cpp -x c++ -o main -Wall - Wextra
+# | g++ -x c++ -
+
+#!/bin/bash
+g++ ../source/main.cpp ../source/excptsextra.cpp -I ../include -o ../compiled/lexer -Wall -Wextra
+cd ../compiled/
+./lexer

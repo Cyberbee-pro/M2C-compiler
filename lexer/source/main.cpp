@@ -6,13 +6,14 @@
 #include <locale>
 #include <map>
 #include <exception>
+#include "../include/excptsextra.h"
 
 enum TokenKeywords
 {
     MAIN,
-    FOR ,
-    WHILE ,
-    IF ,
+    FOR,
+    WHILE,
+    IF,
     ELSE,
     PRINT,
     EXIT
@@ -25,9 +26,7 @@ static inline std::map<std::string, TokenKeywords> keywordsMap = {
     {"~", TokenKeywords::IF},
     {"~~", TokenKeywords::ELSE},
     {"<", TokenKeywords::PRINT},
-    {"^", TokenKeywords::EXIT}
-};
-
+    {"^", TokenKeywords::EXIT}};
 
 enum TokenSeparator
 {
@@ -43,12 +42,7 @@ static inline std::map<std::string, TokenSeparator> separatorMap = {
     {"}", TokenSeparator::CURL_END},
     {",", TokenSeparator::COMA},
     {";", TokenSeparator::SEMI_COLLON},
-    {" ", TokenSeparator::SPACE}
-};
-
-
-
-
+    {" ", TokenSeparator::SPACE}};
 
 enum TokenType
 {
@@ -59,8 +53,34 @@ enum TokenType
     OPERATOR
 };
 
-enum TokenChar{
-    A,B,C,D,E,F,G,H,I,J,K,L,M,N,O,P,Q,R,S,T,U,V,W,X,Y,Z,
+enum TokenChar
+{
+    A,
+    B,
+    C,
+    D,
+    E,
+    F,
+    G,
+    H,
+    I,
+    J,
+    K,
+    L,
+    M,
+    N,
+    O,
+    P,
+    Q,
+    R,
+    S,
+    T,
+    U,
+    V,
+    W,
+    X,
+    Y,
+    Z,
 };
 
 std::map<std::string, TokenChar> charMap = {
@@ -89,12 +109,20 @@ std::map<std::string, TokenChar> charMap = {
     {".--", TokenChar::W},
     {"-..-", TokenChar::X},
     {"-.--", TokenChar::Y},
-    {"--..", TokenChar::Z}
-};
+    {"--..", TokenChar::Z}};
 
-
-enum TokenNumeric{
-    ZERO,ONE,TWO,THREE,FOUR,FIVE,SIX,SEVEN,EIGHT,NINE
+enum TokenNumeric
+{
+    ZERO,
+    ONE,
+    TWO,
+    THREE,
+    FOUR,
+    FIVE,
+    SIX,
+    SEVEN,
+    EIGHT,
+    NINE
 };
 
 std::map<std::string, TokenNumeric> numericMap = {
@@ -107,10 +135,7 @@ std::map<std::string, TokenNumeric> numericMap = {
     {"-....", TokenNumeric::SIX},
     {"--...", TokenNumeric::SEVEN},
     {"---..", TokenNumeric::EIGHT},
-    {"----.", TokenNumeric::NINE}
-};
-
-
+    {"----.", TokenNumeric::NINE}};
 
 struct Token
 {
@@ -118,14 +143,12 @@ struct Token
     TokenKeywords type;
 };
 
-
-
 class fileReader
 {
 private:
     std::ifstream inputFile;
     std::string fileName, readLine;
-    int i,error = 0;
+    int i, error = 0, Line = 0;
 
 public:
     fileReader()
@@ -164,38 +187,38 @@ public:
     // 3. Read the file line by line
     void readFile()
     {
+        Line = 0;
         while (std::getline(inputFile, readLine))
         {
             // 4. Tokenize each line into tokens and separators
             std::string buffer = "";
             for (i = 0; i < readLine.length(); i++)
             {
-                if(readLine[i] == '/' && readLine[i+1] == '/')
+                if (readLine[i] == '/' && readLine[i + 1] == '/')
                 {
                     std::cout << "\nComment : \"" << readLine.substr(i) << "\"" << std::endl;
                     break;
-
                 }
                 // Checks for separators ie space , semicolon,coma, curly braces and prints them and the buffer if it is not empty
-                else if (readLine[i] == ' ' || readLine[i] == ';'||readLine[i] == '{' || readLine[i] == '}'||readLine[i] == ',')
+                else if (readLine[i] == ' ' || readLine[i] == ';' || readLine[i] == '{' || readLine[i] == '}' || readLine[i] == ',')
                 {
                     std::cout << "\nSeperator : \"" << readLine[i] << "\"" << std::endl;
                     if (buffer != "")
                     {
-                        std::cout << "Buffer : " << buffer <<std::endl<< std::endl;
+                        std::cout << "Buffer : " << buffer << std::endl<< std::endl;
                         buffer = "";
                     }
-                }// open perenthesis is not a separator but it is used to check for function calls and loops and if statements
+                } // open perenthesis is not a separator but it is used to check for function calls and loops and if statements
                 else if (readLine[i] == '(')
-                {   
-                    std::cout << "Buffer : " << buffer <<std::endl;
+                {
+                    std::cout << "Buffer : " << buffer << std::endl;
                     std::cout << "\nOpen Parenthesis : \"" << readLine[i] << "\"" << std::endl;
                     buffer = "";
                 }
                 else if (readLine[i] == ')')
                 {
                     std::cout << "\nClose Parenthesis : \"" << readLine[i] << "\"" << std::endl;
-                    std::cout << "Buffer : " << buffer <<std::endl<< std::endl;
+                    std::cout << "Buffer : " << buffer << std::endl<< std::endl;
                     buffer = "";
                 }
                 // checks for number tokens
@@ -216,30 +239,26 @@ public:
                     buffer += readLine[i];
                     std::cout << "Token : " << readLine[i] << std::endl;
                 }
-                
             }
             // throws error if line ends without separator and buffer is not empty
-            try{ 
-            if (i == readLine.length() && buffer != "")
+            try
             {
-                std::cout << "\n Buffer : " << buffer << std::endl;
-                buffer = "";
-                std::cout << "Line end" << std::endl;
+                if (i == readLine.length() && buffer != "" && readLine[i] != ';' && (readLine[i] != '{' || readLine[i] != '}'))
+                {
+                    std::cout << "\n Buffer : " << buffer << std::endl;
+                    buffer = "";
+                    std::cout << "Line end" << std::endl;
+                }
+                throw CompileError("[Expected ; in the end of line]", readLine, Line);
             }
-            throw    std::compiletime_error(std::cout << "ERROR : Line end without separator!!" << std::endl);
-            
-        }
-        catch(){
-            std::cerr << "Error: Line end without separator!!" << std::endl;
-        }
+            catch (const CompileError &e)
+            {
+                std::cerr << e.what() << std::endl;
+            }
+
+            Line++;
         }
     }
-
-
-    
-
-
-
 
     ~fileReader()
     {
@@ -251,7 +270,7 @@ public:
 int main()
 {
     // std::cout << "Hi Mom" << std::endl;
-    fileReader file("test.cym2c");
+    fileReader file("../../m2c_files/test.cym2c");
     // file.openFile();
     file.readFile();
     return 0;
