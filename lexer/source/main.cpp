@@ -248,8 +248,8 @@ public:
                     std::cout << "\n Buffer : " << buffer << std::endl;
                     buffer = "";
                     std::cout << "Line end" << std::endl;
+                    throw CompileError("***[Expected ; in the end of line]***", readLine, Line);
                 }
-                throw CompileError("[Expected ; in the end of line]", readLine, Line);
             }
             catch (const CompileError &e)
             {
