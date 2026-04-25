@@ -8,56 +8,13 @@
 #include <exception>
 #include "../include/excptsextra.h"
 #include "../include/morse.h"
+#include "../include/tokens.h"
 
-enum TokenKeywords
-{
-    MAIN,
-    FOR,
-    WHILE,
-    IF,
-    ELSE,
-    PRINT,
-    EXIT
-};
-
-static inline std::map<std::string, TokenKeywords> keywordsMap = {
-    {"/", TokenKeywords::MAIN},
-    {"%", TokenKeywords::FOR},
-    {"%%", TokenKeywords::WHILE},
-    {"~", TokenKeywords::IF},
-    {"~~", TokenKeywords::ELSE},
-    {"<", TokenKeywords::PRINT},
-    {"^", TokenKeywords::EXIT}};
-
-enum TokenSeparator
-{
-    CURL_ST,
-    CURL_END,
-    COMA,
-    SEMI_COLLON,
-    SPACE
-};
-
-static inline std::map<std::string, TokenSeparator> separatorMap = {
-    {"{", TokenSeparator::CURL_ST},
-    {"}", TokenSeparator::CURL_END},
-    {",", TokenSeparator::COMA},
-    {";", TokenSeparator::SEMI_COLLON},
-    {" ", TokenSeparator::SPACE}};
-
-enum TokenType
-{
-    KEYWORD,
-    SEPARATOR,
-    IDENTIFIER,
-    LITERAL,
-    OPERATOR
-};
-
+// --- UPDATED TOKEN STRUCT ---
 struct Token
 {
-    std::string value;
-    TokenKeywords type;
+    std::string value; // e.g., "%%"
+    std::string type;  // e.g., "WHILE" or "KEYWORD"
 };
 
 class fileReader
@@ -96,69 +53,72 @@ public:
         }
     }
 
-
     // 3. Read the file line by line
     void readFile()
     {
+
         Line = 0;
+
         while (std::getline(inputFile, readLine))
         {
+            char current;
             // 4. Tokenize each line into tokens and separators
             std::string buffer = "";
             for (i = 0; i < static_cast<int>(readLine.length()); i++)
             {
-                if (readLine[i] == '/' && readLine[i + 1] == '/')
+                current = readLine[i];
+                // checks for Comments
+                if (current == '/' && readLine[i + 1] == '/')
                 {
                     std::cout << "\nComment : \"" << readLine.substr(i) << "\"" << std::endl;
                     break;
                 }
-                // Checks for separators ie space , semicolon,coma, curly braces and prints them and the buffer if it is not empty
-                else if (readLine[i] == ' ' || readLine[i] == ';' || readLine[i] == '{' || readLine[i] == '}' || readLine[i] == ','|| readLine[i] == '\"' || readLine[i]=='\"')
+                // checks for separators and prints them and the buffer if it is not empty
+                else if (M2C::separatorMap.find(std::string(1, current)) != M2C::separatorMap.end())
                 {
-                    std::cout << "\nSeperator : \" " << readLine[i] << " \"" << std::endl;
+                    std::cout << "\nSeperator : \" " << current << " \"" << std::endl;
                     if (buffer != "")
                     {
-                        std::cout << "Buffer : " << buffer << "\n" <<std::endl;
-                        std::cout << "morse ? " << isMorse(buffer) << std::endl;
-                        std::cout << "morse Translation? " << morseToStr(buffer) << std::endl;
+                        std::cout << "Buffer : " << buffer << "\n"
+                                  << std::endl;
                         buffer = "";
                     }
                 } // open perenthesis is not a separator but it is used to check for function calls and loops and if statements
-                else if (readLine[i] == '(')
+                // checks for keywords and prints them
+                else if(M2C::keywordsMap.find(std::string(1, current)) != M2C::keywordsMap.end()){
+                    std::cout << "\nKeyword : \"" << current << "\"" << std::endl;
+                }
+                // close parenthesis is not a separator but it is used to check for function calls and loops and if statements
+                // check for parenthesis
+                else if (current == '(')
                 {
                     std::cout << "Buffer : " << buffer << std::endl;
-                    std::cout << "\nOpen Parenthesis : \"" << readLine[i] << "\"" << std::endl;
+                    std::cout << "\nOpen Parenthesis : \"" << current << "\"" << std::endl;
                     buffer = "";
                 }
-                else if (readLine[i] == ')')
+                else if (current == ')')
                 {
-                    std::cout << "\nClose Parenthesis : \"" << readLine[i] << "\"" << std::endl;
-                    std::cout << "Buffer : " << buffer <<"\n"<< std::endl;
+                    std::cout << "\nClose Parenthesis : \"" << current << "\"" << std::endl;
+                    std::cout << "Buffer : " << buffer << "\n"
+                              << std::endl;
                     buffer = "";
                 }
-                // checks for number tokens
-                else if (std::isdigit(readLine[i]))
+                else if (current == '\"')
                 {
-                    buffer += readLine[i];
-                    std::cout << "Token_Numeric : " << readLine[i] << std::endl;
+                    i++;
+                    std::cout << "\nFound Quote!" << std::endl;
+                    std::cout << "morse Translation? " << morse_parse(readLine, i) << std::endl;
                 }
-                // checks for alphabetic tokens
-                else if (std::isalpha(readLine[i]))
-                {
-                    buffer += readLine[i];
-                    std::cout << "Token_Alphabetic : " << readLine[i] << std::endl;
-                }
-                // prints the token if it is not a separator and adds it to the buffer
                 else
                 {
-                    buffer += readLine[i];
-                    std::cout << "Token : " << readLine[i] << std::endl;
+                    buffer += current;
+                    std::cout << "Token : " << current << std::endl;
                 }
             }
             // throws error if line ends without separator and buffer is not empty
             try
             {
-                if (i == static_cast<int>(readLine.length()) && buffer != "" && readLine[i] != ';' && (readLine[i] != '{' || readLine[i] != '}'))
+                if (i == static_cast<int>(readLine.length()) && buffer != "" && current != ';' && (current != '{' || current != '}'))
                 {
                     std::cout << "\n Buffer : " << buffer << std::endl;
                     buffer = "";
