@@ -28,6 +28,13 @@ bool isChar(std::string buffer);
 bool isNum(std::string buffer);
 bool isMorse(std::string buffer);
 char morseToChar(std::string buffer);
+std::string morse_parse(std::string &readLine,int &i);
 std::string morseToStr(std::string buffer);
+
+namespace morseVars{
+    static inline std::string translatedToken = "String Not initialized";
+    static inline std::string buffer = "";
+    static inline std::string wrod = "";
+}
 
 #endif
