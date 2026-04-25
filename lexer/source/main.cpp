@@ -75,7 +75,12 @@ public:
     fileReader(std::string fileName)
     {
         this->fileName = fileName;
-        openFile(1);
+        inputFile.open(fileName);
+        if (!inputFile.is_open())
+        {
+            std::cerr << "Error: Could not open the file!" << std::endl;
+            exit(1);
+        }
     }
 
     // std::ifstream inputFile("test.cym2c");
@@ -91,15 +96,6 @@ public:
         }
     }
 
-    void openFile(int i)
-    {
-        inputFile.open(fileName);
-        if (!inputFile.is_open())
-        {
-            std::cerr << "Error: Could not open the file!" << std::endl;
-            exit(1);
-        }
-    }
 
     // 3. Read the file line by line
     void readFile()
@@ -109,7 +105,7 @@ public:
         {
             // 4. Tokenize each line into tokens and separators
             std::string buffer = "";
-            for (i = 0; i < readLine.length(); i++)
+            for (i = 0; i < static_cast<int>(readLine.length()); i++)
             {
                 if (readLine[i] == '/' && readLine[i + 1] == '/')
                 {
@@ -162,7 +158,7 @@ public:
             // throws error if line ends without separator and buffer is not empty
             try
             {
-                if (i == readLine.length() && buffer != "" && readLine[i] != ';' && (readLine[i] != '{' || readLine[i] != '}'))
+                if (i == static_cast<int>(readLine.length()) && buffer != "" && readLine[i] != ';' && (readLine[i] != '{' || readLine[i] != '}'))
                 {
                     std::cout << "\n Buffer : " << buffer << std::endl;
                     buffer = "";
