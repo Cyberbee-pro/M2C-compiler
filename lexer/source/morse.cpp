@@ -62,37 +62,35 @@ std::string morse_parse(std::string &readLine, int &i)
     morseVars::translatedToken = "";
     for (; i < static_cast<int>(readLine.length()); i++)
     {
-        if (readLine[i] == '\"')
+        if(morseVars::buffer == "" && readLine[i] == ' '){
+            morseVars::buffer = "";
+        }else if (readLine[i] == ' ')
+        {   
+            if(isMorse(morseVars::buffer)){
+                morseVars::wrod += morseToStr(morseVars::buffer);
+                if (readLine[i + 1] == ' '||readLine[i + 1] == '\"'){
+                    morseVars::translatedToken += morseVars::wrod;
+                    morseVars::translatedToken += " ";
+                    morseVars::wrod = "";
+                    i++;
+                }    
+                morseVars::buffer = "";
+            }
+        }
+        else if (readLine[i] == '\"')
         {
+            morseVars::translatedToken += morseVars::wrod;
             if(morseVars::buffer != ""){
                 morseVars::wrod += morseToStr(morseVars::buffer);
-                morseVars::translatedToken += morseVars::wrod;
                 return morseVars::translatedToken;
             }else if(readLine[i-1] == ' ' && morseVars::buffer == ""){
                 morseVars::translatedToken += morseVars::wrod;
                 return morseVars::translatedToken;
             }
             return morseVars::translatedToken;
-        }else if (readLine[i] == ' ' && readLine[i + 1] == ' ')
-        {
-            morseVars::wrod += morseToStr(morseVars::buffer);
-            morseVars::translatedToken += morseVars::wrod;
-            morseVars::translatedToken += " ";
-            morseVars::buffer = "";
-            morseVars::wrod = "";
-        }else if(morseVars::buffer == "" && readLine[i] == ' '){
-            morseVars::buffer = "";
-        }else if (readLine[i] == ' ')
-        {   
-            if(isMorse(morseVars::buffer)){
-                morseVars::wrod += morseToStr(morseVars::buffer);
-                morseVars::buffer = "";
-            }
         }else{   
             morseVars::buffer += readLine[i];
         }
-
-        // std::cout << "Current Token : " << readLine[i] << std::endl;
 
     }
     return morseVars::translatedToken;
