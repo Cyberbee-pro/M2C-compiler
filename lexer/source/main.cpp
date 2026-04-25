@@ -117,13 +117,14 @@ public:
                     break;
                 }
                 // Checks for separators ie space , semicolon,coma, curly braces and prints them and the buffer if it is not empty
-                else if (readLine[i] == ' ' || readLine[i] == ';' || readLine[i] == '{' || readLine[i] == '}' || readLine[i] == ',')
+                else if (readLine[i] == ' ' || readLine[i] == ';' || readLine[i] == '{' || readLine[i] == '}' || readLine[i] == ','|| readLine[i] == '\"' || readLine[i]=='\"')
                 {
-                    std::cout << "\nSeperator : \"" << readLine[i] << "\"" << std::endl;
+                    std::cout << "\nSeperator : \" " << readLine[i] << " \"" << std::endl;
                     if (buffer != "")
                     {
                         std::cout << "Buffer : " << buffer << "\n" <<std::endl;
                         std::cout << "morse ? " << isMorse(buffer) << std::endl;
+                        std::cout << "morse Translation? " << morseToStr(buffer) << std::endl;
                         buffer = "";
                     }
                 } // open perenthesis is not a separator but it is used to check for function calls and loops and if statements
