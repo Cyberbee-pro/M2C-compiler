@@ -1,153 +1,147 @@
-# Contributing to M2C Compiler
+# Contributing To M2C Compiler
 
-Thank you for contributing to the M2C Compiler! This guide will help you understand how to get started and make meaningful contributions.
+This guide is for contributors who want to improve the M2C compiler in a way that matches the real state of the repository.
 
-## 🎯 Overview: What is M2C?
+## Project Reality First
 
-M2C is a **5-phase compiler** that translates morse-encoded source code into executable C code. Each phase has a specific role:
+M2C is organized as a five-stage compiler:
 
-1. **Lexer** - Reads morse, outputs tokens  
-2. **Syntaxer** - Validates structure, builds AST
-3. **Semanter** - Checks types and scope
-4. **Optimizers** - Improves performance (optional)
-5. **Generators** - Converts AST to C
+1. Lexer
+2. Syntaxer
+3. Semanter
+4. Optimizers
+5. Generators
 
-See [README.md](readme.md) for the full architecture overview.
+Right now, only the lexer stage is implemented as runnable code. The later stages exist as documented design targets in their phase `readme.md` files.
 
-## 🔧 How to Get Started
+Before starting, read:
 
-### Step 1: Choose Your Phase
+- [readme.md](readme.md) for the short project overview
+- [working.md](working.md) for the full pipeline and implementation walkthrough
 
-Select the compiler phase you'd like to work on:
+## Best Places To Contribute
 
-| Phase | Folder | Great For | Difficulty |
-|-------|--------|-----------|------------|
-| Lexer | `lexer/` | Parsing morse patterns, tokenization | Medium |
-| Syntaxer | `syntaxer/` | Grammar rules, tree structures | Hard |
-| Semanter | `semanter/` | Type checking, scope management | Hard |
-| Optimizers | `optimizers/` | Algorithm design, code improvement | Medium |
-| Generators | `generations/` | C code output, string formatting | Medium |
+The highest-value work at the moment is:
 
-**New to compilers?** Start with **Lexer** or **Generators** - they're more intuitive.
+1. Improve the lexer so it returns a real token stream instead of printing diagnostics only.
+2. Add support for multi-character tokens such as `%%` and `~~`.
+3. Move shared token structures into a reusable header.
+4. Start the syntaxer with a minimal parser for blocks, print statements, and literals.
+5. Expand tests and sample `.cym2c` programs.
+6. Tighten build instructions and developer workflow.
 
-### Step 2: Read the Phase Documentation
+If you want a first contribution with low risk, start in `lexer/`.
 
-Each phase directory has a `readme.md` file:
-- Data structures (Token, AST nodes, etc.)
-- Algorithm guidelines  
-- Implementation patterns
-- Test examples
+## Repository Areas
+
+| Area | Folder | Current state |
+|---|---|---|
+| Core working implementation | `lexer/` | Active code |
+| Parser design | `syntaxer/` | Documentation only |
+| Semantic analysis design | `semanter/` | Documentation only |
+| Optimization design | `optimizers/` | Documentation only |
+| Code generation design | `generators/` | Documentation only |
+| Sample input files | `m2c_files/` | Active examples |
+
+## Development Workflow
+
+1. Read the relevant phase documentation before changing code.
+2. Check the current behavior locally.
+3. Make focused changes.
+4. Re-run the build and sample input.
+5. Update documentation when behavior changes.
+
+## Building The Current Code
+
+Run the existing build script from its own directory:
 
 ```bash
-cd <phase-directory>
-cat readme.md
+cd lexer/scripts
+bash build.sh
 ```
 
-### Step 3: Implement Your Component
+Or build from the repository root:
 
-- Follow the guidelines in the phase README
-- Use the provided code structures
-- Implement core functions
-- Add comments for complex logic
-
-### Step 4: Test Your Code
-
-Write test cases for:
-- Valid input cases (morse code that should work)
-- Invalid input cases (error handling)
-- Edge cases (empty input, single character, etc.)
-
-**Example test:**
-```cpp
-Lexer lexer("(% (i;0;10) (<\"hi\">))");
-auto tokens = lexer.tokenize();
-assert(tokens.size() > 0);
-assert(tokens[0].type == SYMBOL);
+```bash
+g++ lexer/source/main.cpp lexer/source/excptsextra.cpp lexer/source/morse.cpp \
+  -I lexer/include \
+  -o lexer/compiled/lexer \
+  -Wall -Wextra
 ```
 
-### Step 5: Submit Changes
+Then run:
 
-- Create clear commit messages
-- Reference issue numbers if applicable  
-- Explain what your code does
-- Include test cases
-
-## 📋 Code Guidelines
-
-### Language & Style
-- **Language**: C/C++
-- **Formatting**: Consistent with existing code in the phase
-- **Comments**: Add explanatory comments for non-obvious logic
-- **Naming**: Use clear, descriptive variable and function names
-
-### Best Practices
-- Don't repeat code (use helper functions)
-- Keep functions focused on one task
-- Return errors clearly (don't silently fail)
-- Handle edge cases explicitly
-
-### Documentation
-- Update the phase README if adding features
-- Comment complex algorithms
-- Provide usage examples
-
-## 🐛 Reporting Issues
-
-Found a bug or have an idea?
-
-1. **Search first** - Check existing issues
-2. **Be specific** - Include morse code example that shows the problem
-3. **Show the error** - Paste error messages or unexpected behavior
-4. **Suggest a fix** - If you have ideas, mention them
-
-**Example issue:**
-```
-Title: Lexer crashes on empty parentheses
-
-Description:
-The lexer crashes when given input: "()"
-
-Error: Segmentation fault at line 45
-
-Expected: Should tokenize as LPAREN, RPAREN
+```bash
+./lexer/compiled/lexer
 ```
 
-## 📚 Learning Resources
+## Coding Guidelines
 
-- **Compiler Theory**: Read about [3-address code](https://en.wikipedia.org/wiki/Three-address_code) and ASTs
-- **Morse Code**: Learn morse syntax in main [README.md](readme.md)
-- **Examples**: Check `phase/readme.md` for code examples
-- **Questions**: Ask in issues or discussions
+- Keep changes small and understandable.
+- Preserve the current folder split by compiler stage.
+- Prefer shared headers for data that will be needed by later phases.
+- Add comments only where the logic is genuinely non-obvious.
+- Keep docs aligned with the actual implementation, not just the intended architecture.
 
-## 🚀 Contribution Checklist
+## Documentation Expectations
 
-Before submitting:
+Update docs when you change:
 
-- [ ] Code follows the style of the phase
-- [ ] All existing tests still pass
-- [ ] New tests added for your changes
-- [ ] Comments explain complex logic
-- [ ] README updated if adding features
-- [ ] Commit message is clear and descriptive
+- build commands
+- language syntax
+- token shapes
+- compiler phase responsibilities
+- sample input/output behavior
 
-## 🎓 Understanding the Pipeline
+At minimum, check whether your change should also update:
 
-As you work on your phase, remember:
-- **Lexer output** → feeds into Syntaxer
-- **Syntaxer output** → feeds into Semanter  
-- **Semanter output** → optionally fed to Optimizers
-- **Optimizer/Semanter output** → fed to Generators
-- **Generators output** → valid C code
+- [readme.md](readme.md)
+- [working.md](working.md)
+- the phase-specific `readme.md`
 
-So if you change something in Lexer, test how it affects downstream phases!
+## Testing Expectations
 
-## 📞 Need Help?
+There is not yet a formal automated test suite, so contributors should verify behavior by running the sample programs in `m2c_files/`.
 
-- Read the phase `readme.md` thoroughly
-- Look at existing implementations
-- Check test files for usage patterns
-- Ask in issues (we're here to help!)
+When you submit a change:
 
----
+1. State which file you used for validation.
+2. Describe the expected output.
+3. Mention any current limitations that still remain.
 
-**Thank you for contributing! Together we're building a unique compiler. 🚀**
+Helpful manual checks include:
+
+- a valid print statement
+- comments starting with `//`
+- malformed lines missing a semicolon
+- Morse strings with one word and multiple words
+- keyword and separator recognition
+
+## Good First Tasks
+
+- Replace debug printing with `Token` collection.
+- Add line and column metadata to tokens.
+- Detect `%%` as a single while token.
+- Detect `~~` as a single else token.
+- Move `Token` into `lexer/include/`.
+- Make the input filename configurable instead of hardcoded.
+- Add more `.cym2c` examples.
+
+## Pull Request Checklist
+
+Before opening a PR, make sure:
+
+- the code builds locally
+- the sample program still runs
+- the docs match the new behavior
+- the change is scoped to a clear problem
+- limitations or follow-up work are called out honestly
+
+## Final Advice
+
+The biggest contribution you can make right now is reducing the gap between:
+
+- the documented five-stage compiler design
+- and the current lexer-only implementation
+
+Anything that makes the lexer reusable by a parser will move the entire project forward.
