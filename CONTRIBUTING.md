@@ -1,88 +1,78 @@
-# Contributing to M2C Compiler
+# Contributing To M2C Compiler
 
-Thank you for your interest in contributing to the M2C Compiler project! This guide will help you understand how to get started.
+This file mirrors [contribution.md](contribution.md) so contributors can use either entry point.
 
-## How to Contribute
+## Project Reality First
 
-### 1. **Understand the Compiler Phases**
+M2C is organized as a five-stage compiler:
 
-Before contributing, familiarize yourself with the standard compiler architecture. Each phase has specific responsibilities:
+1. Lexer
+2. Syntaxer
+3. Semanter
+4. Optimizers
+5. Generators
 
-- **Lexer** (Lexical Analysis): Token generation
-- **Syntaxer** (Syntax Analysis): Structure validation and AST building
-- **Semanter** (Semantic Analysis): Logical error detection
-- **Optimizers** (Optimization): Performance improvement
-- **Generators** (Code Generation): C code output
+Only the lexer is implemented as runnable code right now. The remaining stages are documented targets.
 
-See [readme.md](readme.md) for the overall architecture.
+Start here:
 
-### 2. **Choose Your Phase**
+- [readme.md](readme.md)
+- [working.md](working.md)
 
-Select one of the compiler phases to contribute to:
+## Best Places To Contribute
 
-| Phase | File | Best For |
-|-------|------|----------|
-| Lexical Analysis | `lexer/` | Token pattern matching, morse-to-token conversion |
-| Syntax Analysis | `syntaxer/` | Grammar rules, AST node design |
-| Semantic Analysis | `semanter/` | Type checking, scope management |
-| Optimization | `optimizers/` | Algorithm design, performance improvement |
-| Code Generation | `generations/` | C code emission, backend engineering |
+The most useful work right now is:
 
-Visit the README in your chosen phase directory for specific guidelines.
+1. Turn the lexer into a real token-stream producer.
+2. Add support for multi-character tokens such as `%%` and `~~`.
+3. Move shared token structures into headers.
+4. Start a minimal syntaxer implementation.
+5. Add more sample programs and validation steps.
 
-### 3. **Development Workflow**
+## Build And Run
 
-```
-1. Fork or clone the repository
-2. Create a branch for your feature/fix
-3. Read the phase-specific README
-4. Implement your changes
-5. Test thoroughly with various morse code inputs
-6. Submit a pull request with clear description
+Run the existing script from `lexer/scripts`:
+
+```bash
+cd lexer/scripts
+bash build.sh
 ```
 
-### 4. **Code Guidelines**
+Or compile from the repository root:
 
-- **Language**: C/C++
-- **Style**: Follow existing code conventions in your chosen phase
-- **Comments**: Add comments for complex logic
-- **Testing**: Include test cases for your changes
-- **Documentation**: Update relevant README files if adding features
+```bash
+g++ lexer/source/main.cpp lexer/source/excptsextra.cpp lexer/source/morse.cpp \
+  -I lexer/include \
+  -o lexer/compiled/lexer \
+  -Wall -Wextra
+```
 
-### 5. **Testing**
+Then run:
 
-Each phase should have test cases. When submitting changes:
-- Ensure all existing tests pass
-- Add new tests for added functionality
-- Test edge cases and error conditions
+```bash
+./lexer/compiled/lexer
+```
 
-### 6. **Issue Reporting**
+## Contribution Rules
 
-If you find bugs or have feature requests:
-- Check existing issues first
-- Provide clear description and reproduction steps
-- Include sample morse code that demonstrates the issue
+- Keep changes scoped and readable.
+- Update docs when behavior changes.
+- Validate the sample `.cym2c` input after code changes.
+- Be explicit about current limitations.
 
-## Phase-Specific Guidelines
+## Good First Tasks
 
-For detailed guidelines on contributing to a specific phase, see:
-- [Lexer Guidelines](lexer/readme.md)
-- [Syntaxer Guidelines](syntaxer/readme.md)
-- [Semanter Guidelines](semanter/readme.md)
-- [Optimizers Guidelines](optimizers/readme.md)
-- [Generators Guidelines](generations/readme.md)
+- collect tokens instead of printing only
+- add token position data
+- support `%%` and `~~`
+- make input filename configurable
+- add more example source files
 
-## Getting Help
+## Pull Request Checklist
 
-- Review the phase-specific README files
-- Check existing code for patterns
-- Look at test cases for usage examples
-- Ask questions in issues or pull request discussions
+- code builds
+- sample input runs
+- docs were updated if needed
+- limitations are documented honestly
 
-## License
-
-By contributing to M2C Compiler, you agree that your contributions will be licensed under the same license as the project.
-
----
-
-Happy contributing! 🚀
+The repository will benefit most from changes that help the lexer feed a future parser cleanly.
