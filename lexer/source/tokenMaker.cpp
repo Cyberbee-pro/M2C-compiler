@@ -56,7 +56,6 @@ void TokenMaker::traverseLines(TokenMaker &Head)
                 std::cout << "Token type : " << CurrentHead->getType();
                 std::cout << "Token Value : " << CurrentHead->getValue();
                 std::cout << "Token in Line : " << CurrentHead->getLine();
-                break;
             }
             else if (CurrentHead->getLine() != -1 && CurrentHead->getType() != "")
             {
