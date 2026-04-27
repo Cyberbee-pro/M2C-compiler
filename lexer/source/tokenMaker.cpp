@@ -46,7 +46,7 @@ void TokenMaker::insertAfter(TokenMaker &prevToken, std::string type, std::strin
     if (&prevToken == nullptr)
     {
         std::cout << "Creating New Token stream . . . .  . " << std::endl;
-        TokenMaker(value, type, Line);
+        TokenMaker *newToken = new TokenMaker(value, type, Line);
     }
     else
     {
