@@ -19,6 +19,7 @@ public:
     TokenMaker();
 
     TokenMaker(std::string value, std::string type, int Line);
+    TokenMaker(std::string value, std::string type, int Line,TokenMaker *prev);
 
     // Getters and setters for value, type, next, prev, and Line
     std::string getValue() const;
@@ -27,10 +28,17 @@ public:
     TokenMaker *getNext() const;
     TokenMaker *getPrev() const;
 
-    // insert a new token after the current token
-    void insertAfter(TokenMaker *newToken);
 
-    static void traverseLines(TokenMaker &Head);
+    void *setPrev(TokenMaker &) ;
+    void *setNext(TokenMaker &) ;
+
+
+
+
+    // insert a new token after the current token
+    void insertAfter(TokenMaker &,std::string,std::string,int);
+
+    static void traverseLines(TokenMaker &);
 
     ~TokenMaker();
 };
