@@ -11,7 +11,6 @@
 #include "../include/morse.h"
 #include "../include/tokens.h"
 
-
 class fileReader
 {
 private:
@@ -56,7 +55,7 @@ public:
 
         while (std::getline(inputFile, readLine))
         {
-            char current;
+            char current = '\0';
             // 4. Tokenize each line into tokens and separators
             std::string buffer = "";
             for (i = 0; i < static_cast<int>(readLine.length()); i++)
@@ -69,6 +68,11 @@ public:
                     break;
                 }
                 // checks for separators and prints them and the buffer if it is not empty
+                else if (current == ' ')
+                {
+                    std::cout << "its a white space im ignoring it " << std::endl;
+                    continue;
+                }
                 else if (M2C::separatorMap.find(std::string(1, current)) != M2C::separatorMap.end())
                 {
                     std::cout << "\nSeperator : \" " << current << " \"" << std::endl;
@@ -83,6 +87,8 @@ public:
                 else if (M2C::keywordsMap.find(std::string(1, current)) != M2C::keywordsMap.end())
                 {
                     std::cout << "\nKeyword : \"" << current << "\"" << std::endl;
+                    buffer = "";
+                    std::cout << "\nNext : " << readLine[i + 1] << std::endl;
                 }
                 // close parenthesis is not a separator but it is used to check for function calls and loops and if statements
                 // check for parenthesis
@@ -104,6 +110,8 @@ public:
                     i++;
                     std::cout << "\nFound Quote!" << std::endl;
                     std::cout << "morse Translation? " << morse_parse(readLine, i) << std::endl;
+                    std::cout << "morse Translation complete. . . . " << std::endl;
+                    i -= 2;
                 }
                 else
                 {
@@ -114,7 +122,24 @@ public:
             // throws error if line ends without separator and buffer is not empty
             try
             {
-                if (i == static_cast<int>(readLine.length()) && buffer != "" && current != ';' && (current != '{' || current != '}'))
+                if (current == ' ' && readLine != "" && (i == static_cast<int>(readLine.length())))
+                {
+                    for (int j = i; ((readLine[j] != ' ') || (j == 0)); j--)
+                    {
+                        current = readLine[j];
+                        if ((current != ';' && (current != '{' && current != '}') && (readLine != "")) && current == ' ')
+                        {
+                            std::cout << "\n Buffer : " << buffer << std::endl;
+                            buffer = "";
+                            std::cout << "\n current : " << current << std::endl;
+                            std::cout << "Line end" << std::endl;
+                            throw CompileError("***[Expected ; in the end of line]***", readLine, Line);
+                            break;
+                        }
+                        std::cout << "Didnt Do anything. . . ." << std::endl;
+                    }
+                }
+                else if ((i == static_cast<int>(readLine.length()) && current != ';') && (current != '{' && current != '}') && (readLine != ""))
                 {
                     std::cout << "\n Buffer : " << buffer << std::endl;
                     buffer = "";
