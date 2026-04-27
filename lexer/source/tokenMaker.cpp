@@ -54,8 +54,6 @@ void TokenMaker::insertAfter(TokenMaker &prevToken, std::string type, std::strin
         TokenMaker *newToken = new TokenMaker(value, type, Line, &prevToken);
         TokenMaker *tempPrevToken = &prevToken;
         tempPrevToken->setNext(*newToken);
-        newToken->setPrev(*tempPrevToken);
-
     }
 }
 
