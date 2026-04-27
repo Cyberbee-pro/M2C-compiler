@@ -7,80 +7,10 @@
 #include <map>
 #include <exception>
 #include "../include/excptsextra.h"
+#include "../include/tokenMaker.h"
 #include "../include/morse.h"
 #include "../include/tokens.h"
 
-class TokenMaker
-{
-
-private:
-    std::string value;          // e.g., "%%"
-    std::string type;           // e.g., "WHILE" or "KEYWORD"
-    TokenMaker *next = nullptr; // Pointer to the next token in the linked list
-    TokenMaker *prev = nullptr; // Pointer to the previous token in the linked list
-
-    int Line; // Line number where the token was found
-
-public:
-    TokenMaker()
-    {
-        next = nullptr;
-        prev = nullptr;
-        value = "";
-        type = "";
-        Line = -1;
-    }
-
-    TokenMaker(std::string value, std::string type, int Line)
-    {
-        this->value = value;
-        this->type = type;
-        this->Line = Line;
-        next = nullptr;
-        prev = nullptr;
-    }
-
-    // Getters and setters for value, type, next, prev, and Line
-    std::string getValue() const { return value; }
-    std::string getType() const { return type; }
-    int getLine() const { return Line; }
-    TokenMaker *getNext() const { return next; }
-    TokenMaker *getPrev() const { return prev; }
-
-    // insert a new token after the current token
-    void insertAfter(TokenMaker *newToken)
-    {
-
-    }
-
-    static void traverseLines(TokenMaker &Head)
-    {
-        if (Head.getPrev() != nullptr)
-        {
-            std::cout<<"Provided Token Object is not a head pointer "<<std::endl;
-            std::cout<<"Proceeding Form Line:"<< Head.getLine();
-        }else if(Head.getLine()==-1){
-            std::cout<<"Token incorrectly made || does not belong to a line "<<std::endl;
-            throw CompileError("Token incorrectly made || line value = -1",std::string(Head.getType(),Head.getValue()),-1);
-        }else if(Head.getNext()==nullptr && Head.getPrev()==nullptr){
-            std::cout<<"Provided list is incomplete or disconected "<<std::endl;
-            std::cout<<"Token type : "<<Head.getType();
-            std::cout<<"Token Value : "<<Head.getValue();
-            std::cout<<"Token in Line : "<<Head.getLine();
-            
-        }else if(Head.getNext()==nullptr){
-            std::cout<<"Traverse end . . . . . . "<<std::endl;
-            std::cout<<"Process traverse exit . . . . . . "<<std::endl;
-
-        }
-    }
-
-    ~TokenMaker()
-    {
-        // delete TokenMaker;
-        std::cout << "\nTokenMaker destructor called!!" << std::endl;
-    }
-};
 
 class fileReader
 {
