@@ -35,35 +35,42 @@ void TokenMaker::insertAfter(TokenMaker *newToken)
 
 void TokenMaker::traverseLines(TokenMaker &Head)
 {
-    if (Head.getPrev() != nullptr)
+    TokenMaker* CurrentHead = &Head;
+    if (CurrentHead->getPrev() != nullptr)
     {
-        std::cout << "Provided Token Object is not a head pointer " << std::endl;
-        std::cout << "Proceeding Form Line:" << Head.getLine();
+        std::cout << "Provided Token Object is not a CurrentHead pointer " << std::endl;
+        std::cout << "Proceeding Form Line:" << CurrentHead->getLine();
     }
-    for (int i = 0; Head.getNext() != nullptr; i++)
+    for (int i = 0; CurrentHead->getNext() != nullptr; i++)
     {
         try
         {
-            if (Head.getLine() == -1)
+            if (CurrentHead->getLine() == -1)
             {
                 std::cout << "Token incorrectly made || does not belong to a line " << std::endl;
-                throw CompileError("Token incorrectly made || line value = -1", Head.getType() + Head.getValue(), -1);
+                throw CompileError("Token incorrectly made || line value = -1", CurrentHead->getType() + CurrentHead->getValue(), -1);
             }
-            else if (Head.getNext() == nullptr && Head.getPrev() == nullptr)
+            else if (CurrentHead->getNext() == nullptr && CurrentHead->getPrev() == nullptr)
             {
                 std::cout << "Provided list is incomplete or disconected | no parent or clild tokens" << std::endl;
-                std::cout << "Token type : " << Head.getType();
-                std::cout << "Token Value : " << Head.getValue();
-                std::cout << "Token in Line : " << Head.getLine();
+                std::cout << "Token type : " << CurrentHead->getType();
+                std::cout << "Token Value : " << CurrentHead->getValue();
+                std::cout << "Token in Line : " << CurrentHead->getLine();
                 break;
             }
-            else if (Head.getLine() != -1 && Head.getType() != "")
+            else if (CurrentHead->getLine() != -1 && CurrentHead->getType() != "")
             {
-                std::cout << "Token type : " << Head.getType();
-                std::cout << "Token Value : " << Head.getValue();
-                std::cout << "Token in Line : " << Head.getLine();
-                (Head.getPrev()==nullptr)?(void)(std::cout << "Head Block . . . . . . " << std::endl):(void)1;
-                (Head.getNext()==nullptr)?(void)(std::cout << "Traverse end . . . . . . " << std::endl):(void)1;
+                std::cout << "Token type : " << CurrentHead->getType();
+                std::cout << "Token Value : " << CurrentHead->getValue();
+                std::cout << "Token in Line : " << CurrentHead->getLine();
+                if (CurrentHead->getPrev()==nullptr){
+                    std::cout << "CurrentHead Block . . . . . . " << std::endl;
+                    CurrentHead = CurrentHead->getNext();
+                }else if(CurrentHead->getNext()==nullptr){
+                    std::cout << "Traverse end . . . . . . " << std::endl;
+                }
+                CurrentHead = CurrentHead->getNext();
+
                 break;
             }
         }
