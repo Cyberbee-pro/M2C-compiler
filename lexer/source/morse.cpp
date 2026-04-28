@@ -60,6 +60,8 @@ std::string morse_parse(std::string &readLine, int &i)
         return morseVars::translatedToken;
     }
     morseVars::translatedToken = "";
+    morseVars::buffer="";
+    morseVars::wrod="";
     for (; i < static_cast<int>(readLine.length()); i++)
     {
         if(morseVars::buffer == "" && readLine[i] == ' '){
