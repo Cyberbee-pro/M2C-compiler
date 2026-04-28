@@ -50,9 +50,7 @@ public:
     // 3. Read the file line by line
     void readFile()
     {
-
         Line = 0;
-
         while (std::getline(inputFile, readLine))
         {
             char current = '\0';
