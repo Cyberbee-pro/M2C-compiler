@@ -68,7 +68,6 @@ public:
                 // checks for separators and prints them and the buffer if it is not empty
                 else if (current == ' ')
                 {
-                    std::cout << "its a white space im ignoring it " << std::endl;
                     continue;
                 }
                 else if (M2C::separatorMap.find(std::string(1, current)) != M2C::separatorMap.end())
@@ -116,14 +115,17 @@ public:
                     buffer += current;
                     std::cout << "Token : " << current << std::endl;
                 }
+                std::cout << " " << i << std::endl;
             }
             // throws error if line ends without separator and buffer is not empty
             try
-            {
-                if (current == ' ' && readLine != "" && (i == static_cast<int>(readLine.length())))
+            { 
+                std::cout<<readLine[i]<<std::endl;
+                if (current == ' ' && readLine != "" && (i == static_cast<int>(readLine.length() - 1)))
                 {
                     for (int j = i; ((readLine[j] != ' ') || (j == 0)); j--)
                     {
+                        std::cout << "this" << std::endl;
                         current = readLine[j];
                         if ((current != ';' && (current != '{' && current != '}') && (readLine != "")) && current == ' ')
                         {
@@ -139,7 +141,8 @@ public:
                 }
                 else if ((i == static_cast<int>(readLine.length()) && current != ';') && (current != '{' && current != '}') && (readLine != ""))
                 {
-                    std::cout << "\n Buffer : " << buffer << std::endl;
+                    std::cout << "no this" << std::endl;
+                    std::cout << "\nBuffer : " << buffer << std::endl;
                     buffer = "";
                     std::cout << "Line end" << std::endl;
                     throw CompileError("***[Expected ; in the end of line]***", readLine, Line);
