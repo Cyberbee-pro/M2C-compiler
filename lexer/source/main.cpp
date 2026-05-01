@@ -119,7 +119,8 @@ public:
             }
             // throws error if line ends without separator and buffer is not empty
             try
-            {
+            { 
+                std::cout<<readLine[i]<<std::endl;
                 if (current == ' ' && readLine != "" && (i == static_cast<int>(readLine.length() - 1)))
                 {
                     for (int j = i; ((readLine[j] != ' ') || (j == 0)); j--)
