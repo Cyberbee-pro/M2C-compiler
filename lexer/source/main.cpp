@@ -106,7 +106,6 @@ public:
                     i++;
                     std::cout << "\nFound Quote!" << std::endl;
                     std::cout << "morse Translation? " << morse_parse(readLine, i) << std::endl;
-                    std::cout << "morse Translation complete. . . . " << std::endl;
                 }
                 else
                 {
@@ -136,9 +135,6 @@ public:
                         }
                         std::cout << "Didnt Do anything. . . . // ; found at index : "<< j << std::endl;
                     }
-
-
-
                 }else if ((i == static_cast<int>(readLine.length()) && current != ';') && (current != '{' && current != '}') && (readLine != ""))
                 {
                     std::cout << "no this\n\n" << std::endl;

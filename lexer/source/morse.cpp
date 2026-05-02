@@ -76,14 +76,12 @@ std::string morse_parse(std::string &readLine, int &i)
                     morseVars::translatedToken += morseVars::wrod;
                     morseVars::translatedToken += " ";
                     morseVars::wrod = "";
-                    i++;
                 }    
                 morseVars::buffer = "";
             }
         }
         else if (readLine[i] == '\"')
         {
-            morseVars::translatedToken += morseVars::wrod;
             if(isMorse(morseVars::buffer)){
                 morseVars::wrod += morseToStr(morseVars::buffer);
                 morseVars::translatedToken += morseVars::wrod;
