@@ -57,11 +57,13 @@ std::string morse_parse(std::string &readLine, int &i)
 {
     if (readLine[i + 1] == '\"')
     {
+        std::cout<<"Skipping. . .. ";
         return morseVars::translatedToken;
     }
     morseVars::translatedToken = "";
     morseVars::buffer="";
     morseVars::wrod="";
+
     for (; i < static_cast<int>(readLine.length()); i++)
     {
         if(morseVars::buffer == "" && readLine[i] == ' '){
@@ -74,16 +76,15 @@ std::string morse_parse(std::string &readLine, int &i)
                     morseVars::translatedToken += morseVars::wrod;
                     morseVars::translatedToken += " ";
                     morseVars::wrod = "";
-                    i++;
                 }    
                 morseVars::buffer = "";
             }
         }
         else if (readLine[i] == '\"')
         {
-            morseVars::translatedToken += morseVars::wrod;
-            if(morseVars::buffer != ""){
+            if(isMorse(morseVars::buffer)){
                 morseVars::wrod += morseToStr(morseVars::buffer);
+                morseVars::translatedToken += morseVars::wrod;
                 return morseVars::translatedToken;
             }else if(readLine[i-1] == ' ' && morseVars::buffer == ""){
                 morseVars::translatedToken += morseVars::wrod;
@@ -95,5 +96,6 @@ std::string morse_parse(std::string &readLine, int &i)
         }
 
     }
+
     return morseVars::translatedToken;
 }
