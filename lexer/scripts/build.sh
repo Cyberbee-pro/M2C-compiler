@@ -2,7 +2,7 @@
 # | g++ -x c++ -
 
 #!/bin/bash
-g++ ../source/main.cpp ../source/excptsextra.cpp ../source/morse.cpp -I ../include -o ../compiled/lexer -Wall -Wextra
+g++ ../source/main.cpp ../source/excptsextra.cpp ../source/morse.cpp ../source/tokenMaker.cpp -I ../include -o ../compiled/lexer -Wall -Wextra
 
 echo "Build Success"
 

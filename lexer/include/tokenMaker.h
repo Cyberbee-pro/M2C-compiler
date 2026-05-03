@@ -25,12 +25,12 @@ public:
     std::string getValue() const;
     std::string getType() const;
     int getLine() const;
-    TokenMaker *getNext() const;
-    TokenMaker *getPrev() const;
+    TokenMaker* getNext() const;
+    TokenMaker* getPrev() const;
 
 
-    void *setPrev(TokenMaker &) ;
-    void *setNext(TokenMaker &) ;
+    void setPrev(TokenMaker &) ;
+    void setNext(TokenMaker &) ;
 
 
 

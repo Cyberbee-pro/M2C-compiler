@@ -37,8 +37,9 @@ int TokenMaker::getLine() const { return Line; }
 TokenMaker *TokenMaker::getNext() const { return next; }
 TokenMaker *TokenMaker::getPrev() const { return prev; }
 
-void *TokenMaker::setPrev(TokenMaker &prev) { this->prev = &prev; };
-void *TokenMaker::setNext(TokenMaker &next) { this->next = &next; };
+// Removed trailing semicolons from these definitions
+void TokenMaker::setPrev(TokenMaker &prev) { this->prev = &prev; }
+void TokenMaker::setNext(TokenMaker &next) { this->next = &next; }
 
 // insert a new token after the current token
 void TokenMaker::insertAfter(TokenMaker &prevToken, std::string type, std::string value, int Line)
@@ -106,6 +107,5 @@ void TokenMaker::traverseLines(TokenMaker &Head)
 
 TokenMaker::~TokenMaker()
 {
-    // delete TokenMaker;
     std::cout << "\nTokenMaker destructor called!!" << std::endl;
 }
